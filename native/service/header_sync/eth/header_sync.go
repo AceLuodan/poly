@@ -93,9 +93,9 @@ func (this *ETHHandler) SyncGenesisHeader(native *native.NativeService) error {
 
 	// log.Infof("putGenesisBlockHeader:header=%s", header)
 
-	log.Infof("SyncBlockHeader:header.ParentHash=%s", header.ParentHash.String())
+	// log.Infof("putGenesisBlockHeader:header.ParentHash=%s", header.ParentHash.String())
 
-	log.Infof("SyncBlockHeader:header.Hash=%s", header.Hash().String())
+	log.Infof("putGenesisBlockHeader:header.Hash=%s", header.Hash().String())
 	//blockHeader.Number.Uint64()
 	log.Infof("putGenesisBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
 	err = putGenesisBlockHeader(native, header, params.ChainID)
@@ -132,7 +132,7 @@ func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
 		}
 		log.Infof("SyncBlockHeader:params.ChainID=%s", headerParams.ChainID)
 
-		log.Infof("SyncBlockHeader:header.ParentHash=%s", header.ParentHash)
+		// log.Infof("SyncBlockHeader:header.ParentHash=%s", header.ParentHash)
 		//blockHeader.Number.Uint64()
 		log.Infof("SyncBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
 		log.Infof("SyncBlockHeader:blockHeader.Hash=%s", header.Hash().String())
