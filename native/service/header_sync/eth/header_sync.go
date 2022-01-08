@@ -91,7 +91,11 @@ func (this *ETHHandler) SyncGenesisHeader(native *native.NativeService) error {
 	//block header storage
 	log.Infof("putGenesisBlockHeader:params.ChainID=%s", params.ChainID)
 
-	log.Infof("putGenesisBlockHeader:header=%s", header)
+	// log.Infof("putGenesisBlockHeader:header=%s", header)
+
+	log.Infof("SyncBlockHeader:header.ParentHash=%s", header.ParentHash)
+
+	log.Infof("SyncBlockHeader:header.Hash=%s", header.Hash())
 	//blockHeader.Number.Uint64()
 	log.Infof("putGenesisBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
 	err = putGenesisBlockHeader(native, header, params.ChainID)
@@ -128,10 +132,11 @@ func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
 		}
 		log.Infof("SyncBlockHeader:params.ChainID=%s", headerParams.ChainID)
 
-		log.Infof("SyncBlockHeader:header=%s", headerParams)
+		log.Infof("SyncBlockHeader:header.ParentHash=%s", header.ParentHash)
 		//blockHeader.Number.Uint64()
 		log.Infof("SyncBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
-		log.Infof("SyncBlockHeader:blockHeader.Number=%s", header)
+		log.Infof("SyncBlockHeader:blockHeader.Hash=%s", header.Hash())
+		log.Infof("SyncBlockHeader:blockHeader.TxHash=%s", header.TxHash)
 		// get pre header
 		parentHeader, parentDifficultySum, err := GetHeaderByHash(native, header.ParentHash.Bytes(), headerParams.ChainID)
 		if err != nil {
