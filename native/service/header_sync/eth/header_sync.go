@@ -89,6 +89,11 @@ func (this *ETHHandler) SyncGenesisHeader(native *native.NativeService) error {
 	}
 
 	//block header storage
+	log.Infof("putGenesisBlockHeader:params.ChainID=%s", params.ChainID)
+
+	log.Infof("putGenesisBlockHeader:header=%s", header)
+	//blockHeader.Number.Uint64()
+	log.Infof("putGenesisBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
 	err = putGenesisBlockHeader(native, header, params.ChainID)
 	if err != nil {
 		return fmt.Errorf("ETHHandler SyncGenesisHeader, put blockHeader error: %v", err)
@@ -98,10 +103,13 @@ func (this *ETHHandler) SyncGenesisHeader(native *native.NativeService) error {
 }
 
 func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
+
 	headerParams := new(scom.SyncBlockHeaderParam)
+
 	if err := headerParams.Deserialization(common.NewZeroCopySource(native.GetInput())); err != nil {
 		return fmt.Errorf("SyncBlockHeader, contract params deserialize error: %v", err)
 	}
+
 	caches := NewCaches(3, native)
 	for _, v := range headerParams.Headers {
 		var header Header
@@ -118,6 +126,12 @@ func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
 			log.Warnf("SyncBlockHeader, header has exist. Header: %s", string(v))
 			continue
 		}
+		log.Infof("SyncBlockHeader:params.ChainID=%s", headerParams.ChainID)
+
+		log.Infof("SyncBlockHeader:header=%s", headerParams)
+		//blockHeader.Number.Uint64()
+		log.Infof("SyncBlockHeader:blockHeader.Number.Uint64()=%s", header.Number.Uint64())
+		log.Infof("SyncBlockHeader:blockHeader.Number=%s", header)
 		// get pre header
 		parentHeader, parentDifficultySum, err := GetHeaderByHash(native, header.ParentHash.Bytes(), headerParams.ChainID)
 		if err != nil {
