@@ -155,9 +155,9 @@ func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
 			return fmt.Errorf("SyncBlockHeader, parent header is not right. Header: %s", string(v))
 		}
 		//verify whether extra size validity
-		if uint64(len(header.Extra)) > params.MaximumExtraDataSize {
-			return fmt.Errorf("SyncBlockHeader, SyncBlockHeader extra-data too long: %d > %d, header: %s", len(header.Extra), params.MaximumExtraDataSize, string(v))
-		}
+		// if uint64(len(header.Extra)) > params.MaximumExtraDataSize {
+		// 	return fmt.Errorf("SyncBlockHeader, SyncBlockHeader extra-data too long: %d > %d, header: %s", len(header.Extra), params.MaximumExtraDataSize, string(v))
+		// }
 		//verify current time validity
 		if header.Time > uint64(time.Now().Add(allowedFutureBlockTime).Unix()) {
 			return fmt.Errorf("SyncBlockHeader,  verify header time error:%s, checktime: %d, header: %s", consensus.ErrFutureBlock, time.Now().Add(allowedFutureBlockTime).Unix(), string(v))
@@ -177,28 +177,32 @@ func (this *ETHHandler) SyncBlockHeader(native *native.NativeService) error {
 		}
 		if isLondon(&header) {
 			err = VerifyEip1559Header(parentHeader, &header)
+
 		} else {
 			err = VerifyGaslimit(parentHeader.GasLimit, header.GasLimit)
+
 		}
 		if err != nil {
 			return fmt.Errorf("SyncBlockHeader, err:%v", err)
 		}
 
 		//verify difficulty
-		var expected *big.Int
-		if isLondon(&header) {
-			expected = makeDifficultyCalculator(big.NewInt(9700000))(header.Time, parentHeader)
-		} else {
-			expected = difficultyCalculator(new(big.Int).SetUint64(header.Time), parentHeader)
-		}
-		if expected.Cmp(header.Difficulty) != 0 {
-			return fmt.Errorf("SyncBlockHeader, invalid difficulty: have %v, want %v, header: %s", header.Difficulty, expected, string(v))
-		}
+		// var expected *big.Int
+		// if isLondon(&header) {
+		// 	expected = makeDifficultyCalculator(big.NewInt(9700000))(header.Time, parentHeader)
+		// 	log.Infof("SyncBlockHeader:blockHeader.isLondon=true,expected=%s,Difficulty=%s", expected, header.Difficulty)
+		// } else {
+		// 	expected = difficultyCalculator(new(big.Int).SetUint64(header.Time), parentHeader)
+		// 	log.Infof("SyncBlockHeader:blockHeader.isLondon=false,expected=%s,Difficulty=%s", expected, header.Difficulty)
+		// }
+		// if expected.Cmp(header.Difficulty) != 0 {
+		// 	return fmt.Errorf("SyncBlockHeader, invalid difficulty: have %v, want %v, header: %s", header.Difficulty, expected, string(v))
+		// }
 		// verfify header
-		err = this.verifyHeader(&header, caches)
-		if err != nil {
-			return fmt.Errorf("SyncBlockHeader, verify header error: %v, header: %s", err, string(v))
-		}
+		// err = this.verifyHeader(&header, caches)
+		// if err != nil {
+		// 	return fmt.Errorf("SyncBlockHeader, verify header error: %v, header: %s", err, string(v))
+		// }
 		//block header storage
 		hederDifficultySum := new(big.Int).Add(header.Difficulty, parentDifficultySum)
 		err = putBlockHeader(native, header, hederDifficultySum, headerParams.ChainID)

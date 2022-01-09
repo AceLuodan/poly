@@ -31,7 +31,6 @@ import (
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/polynetwork/poly/common/config"
 	"github.com/polynetwork/poly/native/service/header_sync/eth/rlp"
 	"golang.org/x/crypto/sha3"
 )
@@ -243,7 +242,8 @@ func isLondon(h *Header) bool {
 	if isTest {
 		return h.Number.Uint64() >= testLondonHeight
 	}
-	return h.BaseFee != nil || h.Number.Uint64() >= config.GetEth1559Height(config.DefConfig.P2PNode.NetworkId)
+	return h.Number.Uint64() >= testLondonHeight
+	// return h.BaseFee != nil || h.Number.Uint64() >= config.GetEth1559Height(config.DefConfig.P2PNode.NetworkId)
 }
 
 // VerifyGaslimit verifies the header gas limit according increase/decrease
